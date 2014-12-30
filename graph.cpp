@@ -88,9 +88,14 @@ int graph::get_size() {
  * @param id_node_2 Id del nodo 2
  */
 void graph::add_edge(int id_node_1, int id_node_2) {
-    if (!direc[id_node_2][id_node_1])
-        direc[id_node_1][id_node_2] = true;
-    else
+    if (id_node_1 == id_node_2)
+        throw std::invalid_argument("No pueden haber aristas a si mismo");
+    if (direc[id_node_2][id_node_1])
         throw std::invalid_argument("El grafo tiene que ser unidireccional");
+    else if (!direc[id_node_1][id_node_2]) {
+        direc[id_node_1][id_node_2] = true;
+        list_dest[id_node_1].insert(list_dest[id_node_1].end(), id_node_2);
+        list_dest[id_node_2].insert(list_dest[id_node_2].end(), id_node_1);
+    }
 }
 
