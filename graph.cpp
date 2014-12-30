@@ -82,6 +82,9 @@ int graph::get_flux(int id_node_1, int id_node_2) {
 int graph::get_size() {
     return size;
 }
+bool graph::has_edge(int id_node_1, int id_node_2){
+    return direc[id_node_1][id_node_2];
+}
 /**
  * Agrega una arista entre id_node_1 y id_node_2.
  * @param id_node_1 Id del nodo 1
@@ -97,5 +100,16 @@ void graph::add_edge(int id_node_1, int id_node_2) {
         list_dest[id_node_1].insert(list_dest[id_node_1].end(), id_node_2);
         list_dest[id_node_2].insert(list_dest[id_node_2].end(), id_node_1);
     }
+}
+
+void graph::get_num_neighbours(int id_node){
+    return list_dest[id_node].size();
+}
+    /**
+     * Devuelve los nodos accesibles desde id_nodo.
+     * @param id_node Id del nodo
+     */
+std::list<int> graph::get_neighbours(int id_node){
+    return list_dest[id_node];
 }
 

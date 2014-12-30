@@ -73,6 +73,22 @@ public:
      * @param id_node_2 Id del nodo 2
      */
     void add_edge(int id_node_1, int id_node_2);
+    /**
+     * Devuelve el numero de nodos accesibles desde id_nodo.
+     * @param id_node Id del nodo
+     */
+    void get_num_neighbours(int id_node);
+    /**
+     * Devuelve los nodos accesibles desde id_nodo.
+     * @param id_node Id del nodo
+     */
+    std::list<int> get_neighbours(int id_node);
+    /**
+     * Devuelve True si existe una arista entre los dos nodos (de id_node_1 a id_nodo_2).
+     * @param id_node_1 Id del nodo 1
+     * @param id_node_2 Id del nodo 2
+     */
+    bool has_edge(int id_node_1, int id_node_2);
 private:
     /**
      * Cantidad de nodos.
