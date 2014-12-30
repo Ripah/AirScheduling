@@ -35,6 +35,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/BFS.o \
+	${OBJECTDIR}/FordFulkerson.o \
 	${OBJECTDIR}/graph.o \
 	${OBJECTDIR}/main.o
 
@@ -62,6 +64,16 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/airscheduling.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/airscheduling ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/BFS.o: BFS.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BFS.o BFS.cpp
+
+${OBJECTDIR}/FordFulkerson.o: FordFulkerson.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/FordFulkerson.o FordFulkerson.cpp
 
 ${OBJECTDIR}/graph.o: graph.cpp 
 	${MKDIR} -p ${OBJECTDIR}
