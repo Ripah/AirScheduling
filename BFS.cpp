@@ -24,7 +24,7 @@ bool BFS::search(const graph &grafo, int s, int t, int &parent[]) {
         std::list<int> neighbours = grafo.get_neighbours(node);
         for (std::list<int>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
             int u = *it;
-            if (!visited[u]) {
+            if (!visited[u] && grafo.get_capacity(node, u) > 0) {
                 visited[u] = true;
                 Q.push(u);
                 parent[u] = node;
