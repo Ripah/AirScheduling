@@ -43,9 +43,10 @@ int FordFulkerson::run(graph &grafo, int s, int t){
                 rGraph.set_capacity(u, node, rGraph.get_capacity(u, node)-flow);
                 grafo.set_flux(u, node, grafo.get_flux(u, node)+flow);
             }
-            else
+            else {
                 rGraph.set_capacity(node, u, rGraph.get_capacity(node, u)+flow);
-            grafo.set_flux(u, node, grafo.get_flux(u, node)-flow);
+                grafo.set_flux(u, node, grafo.get_flux(u, node)-flow);
+            }
         }
         max_flow += flow;
     }
