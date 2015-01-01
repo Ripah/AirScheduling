@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include "graph.h"
-
+#include "FordFulkerson.h"
 using namespace std;
 
 struct trayecto {
@@ -15,6 +15,8 @@ struct trayecto {
         return i.salida < j.salida; 
     }
 };
+
+FordFulkerson ff;
 
 int main(int argc, char** argv) {
     // version 1
@@ -83,6 +85,8 @@ int main(int argc, char** argv) {
             grafo.set_capacity(i, t, value);
         }
     }
+    
+    ff.run(grafo, s, t);
     return 0;
 }
 
