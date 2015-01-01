@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 
-/** Grafo unidireccional.
+/** Grafo.
  */
 class graph {
 public:
@@ -95,17 +95,17 @@ private:
      */
     int size;
     /**
-     * Capacidades y flujo de las aristas y valor de los nodos.
-     * Dados dos nodos u, v y una arista a entre ellos
-     * capacidad(a) = values[u][v]
-     * flujo(a) = values[v][u]
-     * valor(v) = values[v][v]
+     * Flujo de las aristas y valor de los nodos.
      */
-    std::vector<std::vector<int> > values;
+    std::vector<std::vector<int> > fluxes;
     /**
-     * Matriz para comprovar la dirección de las aristas.
+     * Capacidad de las aristas.
      */
-    std::vector<std::vector<bool> > direc;
+    std::vector<std::vector<int> > capacities;
+    /**
+     * Vertices existentes
+     */
+    std::vector<std::vector<bool> > vertexs;
     /**
      * Listas de adyascencia, list_dest[v] contiene todos los nodos accesibles desde v
      */
