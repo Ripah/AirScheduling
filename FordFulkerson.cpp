@@ -12,7 +12,7 @@ FordFulkerson::FordFulkerson() {
 
 FordFulkerson::FordFulkerson(const FordFulkerson& orig) {
 }
-int FordFulkerson::run(const graph &grafo, int s, int t){
+int FordFulkerson::run(graph &grafo, int s, int t){
     BFS bfs;
     graph rGraph(grafo.get_size());
     for (int i = 0; i < rGraph.get_size(); ++i) {
@@ -41,9 +41,11 @@ int FordFulkerson::run(const graph &grafo, int s, int t){
             u = parent[node];
             if (grafo.has_edge(u, node)){
                 rGraph.set_capacity(u, node, rGraph.get_capacity(u, node)-flow);
+                grafo.set_flux(u, node, grafo.get_flux(u, node)+flow);
             }
             else
                 rGraph.set_capacity(node, u, rGraph.get_capacity(node, u)+flow);
+            grafo.set_flux(u, node, grafo.get_flux(u, node)-flow);
         }
         max_flow += flow;
     }

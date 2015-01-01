@@ -15,7 +15,7 @@ public:
     FordFulkerson();
     FordFulkerson(const FordFulkerson& orig);
     virtual ~FordFulkerson();
-    int run(const graph &grafo, int s, int t);
+    int run(graph &grafo, int s, int t);
 private:
 
 };

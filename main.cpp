@@ -52,6 +52,37 @@ int main(int argc, char** argv) {
         }
     }
     
+    //Eliminar cotas inferiores del grafo
+    for (int i = 0; i < T.size(); i++) {
+        for (int j = 0; j < T.size(); j++) {
+            if (grafo.has_edge(i, j)) {
+                int cota = grafo.get_flux(i, j);
+                //A la capacidad de la arista le restamos la cota
+                grafo.set_capacity(i, j, grafo.get_capacity(i, j)-cota);
+                //Al origen de la arista le sumamos la cota
+                grafo.set_value(i, grafo.get_value(i)+cota);
+                //Al destino de la arista le restamos la cota
+                grafo.set_value(j, grafo.get_value(j)-cota);
+            }
+        }
+    }
+    
+    //Eliminamos las capacidades de los nodos usando S y T
+    //S = T.size()*2
+    //T = T.size()*2 +1
+    int s = T.size()*2;
+    int t = T.size()*2 + 1;
+    for (int i = 0; i < T.size()*2; i++) {
+        int value = grafo.get_value(i);
+        if (value < 0) {
+            grafo.add_edge(s, i);
+            grafo.set_capacity(s, i, value*(-1));
+        }
+        else {
+            grafo.add_edge(i, t);
+            grafo.set_capacity(i, t, value);
+        }
+    }
     return 0;
 }
 
