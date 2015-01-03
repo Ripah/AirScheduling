@@ -15,10 +15,9 @@ public:
     BFS();
     BFS(const BFS& orig);
     virtual ~BFS();
-    bool search(const graph &grafo, int s, int t, int &parent[]);
+    bool search(graph grafo, int s, int t, int parent[]);
 private:
 
 };
 
 #endif	/* BFS_H */
-
