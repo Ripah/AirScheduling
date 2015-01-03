@@ -77,7 +77,7 @@ public:
      * Devuelve el numero de nodos accesibles desde id_nodo.
      * @param id_node Id del nodo
      */
-    void get_num_neighbours(int id_node);
+    int get_num_neighbours(int id_node);
     /**
      * Devuelve los nodos accesibles desde id_nodo.
      * @param id_node Id del nodo
