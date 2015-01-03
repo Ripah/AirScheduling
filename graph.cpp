@@ -1,6 +1,6 @@
 #include "graph.h"
 #include <stdexcept>
-
+#include <iostream>
 graph::graph() {
     size = 0;
 }
@@ -31,10 +31,12 @@ void graph::set_value(int id_node, int value) {
  * @param capacity Nueva capacidad
  */
 void graph::set_capacity(int id_node_1, int id_node_2, int capacity) {
-    if (vertexs[id_node_1][id_node_2])
-        fluxes[id_node_1][id_node_2] = capacity;
+    if (vertexs[id_node_1][id_node_2]) {
+        capacities[id_node_1][id_node_2] = capacity;
+        //std::cout << "Anadiendo capacidad desde " << id_node_1 << " a " << id_node_2 << " con valor " << capacity << std::endl;
+    }
     else
-        throw std::invalid_argument("No existe esa arista");
+        throw std::invalid_argument("No existe esa arista (SET_CAPACITY FUNCTION)");
 }
 /**
  * Cambia el flujo de la arista entre id_node_1 y id_node_2 a flux.
@@ -43,10 +45,12 @@ void graph::set_capacity(int id_node_1, int id_node_2, int capacity) {
  * @param flux Nuevo flujo
  */
 void graph::set_flux(int id_node_1, int id_node_2, int flux) {
-    if (vertexs[id_node_1][id_node_2])
-        fluxes[id_node_2][id_node_1] = flux;
+    if (vertexs[id_node_1][id_node_2]) {
+        fluxes[id_node_1][id_node_2] = flux;
+       // std::cout << "Anadiendo flujo desde " << id_node_1 << " a " << id_node_2 << " con valor " << flux << std::endl;
+    }
     else
-        throw std::invalid_argument("No existe esa arista");
+        throw std::invalid_argument("No existe esa arista (SET_FLUX FUNCTION)");
 }
 /**
  * Devuelve el valor del nodo id_node.
@@ -64,9 +68,9 @@ int graph::get_value(int id_node) {
  */
 int graph::get_capacity(int id_node_1, int id_node_2) {
     if (vertexs[id_node_1][id_node_2])
-        return fluxes[id_node_1][id_node_2];
+        return capacities[id_node_1][id_node_2];
     else
-        throw std::invalid_argument("No existe esa arista");
+        throw std::invalid_argument("No existe esa arista (GET_CAPACITY FUNCTION)");
 }
 /**
  * Devuelve el flujo de la arista entre id_node_1 y id_node_2.
@@ -76,9 +80,9 @@ int graph::get_capacity(int id_node_1, int id_node_2) {
  */
 int graph::get_flux(int id_node_1, int id_node_2) {
     if (vertexs[id_node_1][id_node_2])
-        return fluxes[id_node_2][id_node_1];
+        return fluxes[id_node_1][id_node_2];
     else
-        throw std::invalid_argument("No existe esa arista");
+        throw std::invalid_argument("No existe esa arista (GET_FLUX FUNCTION)");
 }
 
 int graph::get_size() {
@@ -96,13 +100,14 @@ void graph::add_edge(int id_node_1, int id_node_2) {
     if (id_node_1 == id_node_2)
         throw std::invalid_argument("No pueden haber aristas a si mismo");
     else if (!vertexs[id_node_1][id_node_2]) {
+        //std::cout << "Anadiendo arista desde " << id_node_1 << " a " << id_node_2 << std::endl;
         vertexs[id_node_1][id_node_2] = true;
         list_dest[id_node_1].insert(list_dest[id_node_1].end(), id_node_2);
-        list_dest[id_node_2].insert(list_dest[id_node_2].end(), id_node_1);
+        list_orig[id_node_2].insert(list_orig[id_node_2].end(), id_node_1);
     }
 }
 
-void graph::get_num_neighbours(int id_node){
+int graph::get_num_neighbours(int id_node){
     return list_dest[id_node].size();
 }
     /**
@@ -112,4 +117,5 @@ void graph::get_num_neighbours(int id_node){
 std::list<int> graph::get_neighbours(int id_node){
     return list_dest[id_node];
 }
+
 
