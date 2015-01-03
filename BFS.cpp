@@ -6,13 +6,14 @@
  */
 
 #include "BFS.h"
-
+#include <iostream>
 BFS::BFS() {
 }
 
 BFS::BFS(const BFS& orig) {
 }
-bool BFS::search(const graph &grafo, int s, int t, int &parent[]) {
+bool BFS::search(graph grafo, int s, int t, int parent[]) {
+    //std::cout << "BFS" << std::endl;
     std::queue<int> Q;
     bool visited[grafo.get_size()];
     Q.push(s);
@@ -24,6 +25,7 @@ bool BFS::search(const graph &grafo, int s, int t, int &parent[]) {
         std::list<int> neighbours = grafo.get_neighbours(node);
         for (std::list<int>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
             int u = *it;
+            
             if (!visited[u] && grafo.get_capacity(node, u) > 0) {
                 visited[u] = true;
                 Q.push(u);
@@ -35,4 +37,5 @@ bool BFS::search(const graph &grafo, int s, int t, int &parent[]) {
 }
 BFS::~BFS() {
 }
+
 
