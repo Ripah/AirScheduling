@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
     
     //grafo.print();
     
-    int k = 46;
+    int k = 0;
     int maxflow = -1;
     while (maxflow == -1) {
         k++;
@@ -129,7 +129,9 @@ int main(int argc, char** argv) {
     int s = T.size()*2;
     int t = T.size()*2+1;
     std::list<int> pilots = grafo.get_neighbours(s);
-    for (std::list<int>::iterator it = pilots.begin(); it != pilots.end(); it++) {
+    int p = 1;
+    for (std::list<int>::iterator it = pilots.begin(); it != pilots.end() && p <= k; it++) {
+        ++p;
         int parent[grafo.get_size()];
         std::queue<int> Q;
         bool visited[grafo.get_size()];
