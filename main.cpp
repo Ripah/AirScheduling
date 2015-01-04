@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
         grafo.set_flux(T.size()+i, T.size()*2+1, 0);
     }
     
-    int k = 1;
+    int k = 45;
     int maxflow = -1;
     while (maxflow == -1) {
         std::cout << "K: " << k << std::endl;
