@@ -116,9 +116,9 @@ int main(int argc, char** argv) {
                 cGrafo.set_capacity(i, t, value);
             }
         }
-        cGrafo.print();
+        //cGrafo.print();
        // std::cout << "Grafo listo" << std::endl;
-        //maxflow = ff.run(cGrafo, s, t);
+       maxflow = ff.run(cGrafo, s, t);
         
        // std::cout <<" MaxFlow: " << maxflow << std::endl;
     }
