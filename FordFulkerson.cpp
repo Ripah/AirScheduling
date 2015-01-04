@@ -72,8 +72,8 @@ int FordFulkerson::run(graph &grafo, int s, int t){
         max_flow += grafo.get_flux(s, (*it));
         sat += grafo.get_capacity(s, (*it));
     }
-    std::cout << "Capacidad: " << sat << std::endl;
-    std::cout << "Flujo: " << max_flow << std::endl;
+    //std::cout << "Capacidad: " << sat << std::endl;
+    //std::cout << "Flujo: " << max_flow << std::endl;
     if (max_flow == sat) {
         return max_flow;
     }

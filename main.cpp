@@ -71,11 +71,11 @@ int main(int argc, char** argv) {
     
     //grafo.print();
     
-    int k = 0;
+    int k = 46;
     int maxflow = -1;
     while (maxflow == -1) {
         k++;
-        std::cout << "K: " << k << std::endl;
+       std::cout << "K: " << k << std::endl;
         graph cGrafo = graph(grafo);
         //std::cout << "Aristas entre S, T y origenes y destinos anadidas" << std::endl;
         //S y T tienen de value -k y k
@@ -119,10 +119,55 @@ int main(int argc, char** argv) {
         //cGrafo.print();
        // std::cout << "Grafo listo" << std::endl;
        maxflow = ff.run(cGrafo, s, t);
-        
+       if (maxflow != -1) {
+           grafo = graph(cGrafo);
+       }
        // std::cout <<" MaxFlow: " << maxflow << std::endl;
     }
-    std::cout << "K: " << k << std::endl;
-    
+    std::cout << k << std::endl;
+    // imprimimos el camino
+    int s = T.size()*2;
+    int t = T.size()*2+1;
+    std::list<int> pilots = grafo.get_neighbours(s);
+    for (std::list<int>::iterator it = pilots.begin(); it != pilots.end(); it++) {
+        int parent[grafo.get_size()];
+        std::queue<int> Q;
+        bool visited[grafo.get_size()];
+        for (int i = 0; i < grafo.get_size(); ++i) {
+            visited[i] = false;
+        }
+        Q.push(s);
+        visited[s] = true;
+        parent[s] = -1;
+        while (!Q.empty()) {
+            int node = Q.front();
+            Q.pop();
+            std::list<int> neighbours;
+            neighbours = grafo.get_neighbours(node);
+
+          //  std::cout << "NODE: " << node << std::endl;
+            for (std::list<int>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+                int u = *it;
+                //std::cout << "vecino: " << u << std::endl;
+                if (!visited[u] && (grafo.get_flux(node, u) == 1 || u == node+T.size())) {
+                   // std::cout << std::endl << "Capacity arista " << node << " " << u << ": " << grafo.get_capacity(node, u) << std::endl;
+                    visited[u] = true;
+                    Q.push(u);
+                    parent[u] = node;
+                }
+            }
+        }
+        for (int node = t; node != s; ) {
+                int u = parent[node];
+                if (node < T.size()) {
+                    std::cout << node << " ";
+                }
+                if (grafo.has_edge(u, node)) {
+                    grafo.set_flux(u, node, 0);
+                }
+                node = u;
+        }
+        std::cout << std::endl;
+    }
     return 0;
 }
