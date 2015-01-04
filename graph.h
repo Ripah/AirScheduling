@@ -89,6 +89,32 @@ public:
      * @param id_node_2 Id del nodo 2
      */
     bool has_edge(int id_node_1, int id_node_2);
+    
+    void print() {
+        std::cout << "vertices:\n";
+        for (int i=0; i<size; i++) {
+            for (int j=0; j<size; j++) {
+                std::cout << vertexs[i][j];
+            }
+            std::cout << "\n";
+        }
+        
+        std::cout << "capacidades:\n";
+        for (int i=0; i<size; i++) {
+            for (int j=0; j<size; j++) {
+                std::cout << capacities[i][j];
+            }
+            std::cout << "\n";
+        }
+        
+        std::cout << "flujos:\n";
+        for (int i=0; i<size; i++) {
+            for (int j=0; j<size; j++) {
+                std::cout << fluxes[i][j];
+            }
+            std::cout << "\n";
+        }
+    }
 private:
     /**
      * Cantidad de nodos.

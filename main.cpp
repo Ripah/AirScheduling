@@ -61,16 +61,20 @@ int main(int argc, char** argv) {
     for (int i=0; i<T.size(); i++) {
         
         grafo.add_edge(T.size()*2, i);//de S a origenes
-        grafo.add_edge(T.size()+i, T.size()*2+1);//de destinos a t
         grafo.set_capacity(T.size()*2, i, 1);
         grafo.set_flux(T.size()*2, i, 0);
+        
+        grafo.add_edge(T.size()+i, T.size()*2+1);//de destinos a t
         grafo.set_capacity(T.size()+i, T.size()*2+1, 1);
         grafo.set_flux(T.size()+i, T.size()*2+1, 0);
     }
     
-    int k = 45;
+    //grafo.print();
+    
+    int k = 0;
     int maxflow = -1;
     while (maxflow == -1) {
+        k++;
         std::cout << "K: " << k << std::endl;
         graph cGrafo = graph(grafo);
         //std::cout << "Aristas entre S, T y origenes y destinos anadidas" << std::endl;
@@ -84,37 +88,41 @@ int main(int argc, char** argv) {
             for (int j = 0; j < cGrafo.get_size(); j++) {
                 if (cGrafo.has_edge(i, j)) {
                     int cota = cGrafo.get_flux(i, j);
-                    //A la capacidad de la arista le restamos la cota
-                    cGrafo.set_capacity(i, j, cGrafo.get_capacity(i, j)-cota);
-                    //Al origen de la arista le sumamos la cota
-                    cGrafo.set_value(i, cGrafo.get_value(i)+cota);
-                    //Al destino de la arista le restamos la cota
-                    cGrafo.set_value(j, cGrafo.get_value(j)-cota);
+                    if (cota != 0) {
+                        //Flujo a cero
+                        cGrafo.set_flux(i, j, 0);
+                        //A la capacidad de la arista le restamos la cota
+                        cGrafo.set_capacity(i, j, cGrafo.get_capacity(i, j)-cota);
+                        //Al origen de la arista le sumamos la cota
+                        cGrafo.set_value(i, cGrafo.get_value(i)+cota);
+                        //Al destino de la arista le restamos la cota
+                        cGrafo.set_value(j, cGrafo.get_value(j)-cota);
+                    }
                 }
             }
         }
-       // std::cout << "Cotas eliminadas" << std::endl;
+        // std::cout << "Cotas eliminadas" << std::endl;
         //Eliminamos las capacidades de los nodos usando S y T
-        int s = T.size()*2+2;
+        int s = T.size()*2 + 2;
         int t = T.size()*2 + 3;
         for (int i = 0; i < s; i++) {
             int value = cGrafo.get_value(i);
             if (value < 0) {
                 cGrafo.add_edge(s, i);
-                cGrafo.set_capacity(s, i, value*(-1));
+                cGrafo.set_capacity(s, i, -value);
             }
             else {
                 cGrafo.add_edge(i, t);
                 cGrafo.set_capacity(i, t, value);
             }
         }
+        cGrafo.print();
        // std::cout << "Grafo listo" << std::endl;
-        maxflow = ff.run(cGrafo, s, t);
+        //maxflow = ff.run(cGrafo, s, t);
         
-        ++k;
        // std::cout <<" MaxFlow: " << maxflow << std::endl;
     }
     std::cout << "K: " << k << std::endl;
+    
     return 0;
 }
-
