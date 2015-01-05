@@ -26,6 +26,7 @@
       </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" &lt; C:\Users\Administrador\Documents\NetBeansProjects\AirScheduling\dist\Debug\MinGW-Windows\i.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}"</runcommand>

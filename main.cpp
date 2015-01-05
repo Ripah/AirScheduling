@@ -32,6 +32,14 @@ int main(int argc, char** argv) {
         cin >> tra.llegada;
         T.insert(T.end(), tra);
     }
+    /*for (int i=0; i<5; i++) {
+        trayecto tra;
+        cin >> tra.origen;
+        cin >> tra.destino;
+        cin >> tra.salida;
+        cin >> tra.llegada;
+        T.insert(T.end(), tra);
+    }*/
     // Odenar las entradas de acuerdo al tiempo de salida
     sort(T.begin(), T.end(), trayecto::comparar);
     
@@ -61,7 +69,7 @@ int main(int argc, char** argv) {
                 // pero como no hay problema si es más grande usaremos el mayor número posible para
                 // simplificar el calculo
                 grafo.add_edge(T.size()+i, T.size()+j);
-                grafo.set_capacity(T.size()+i, T.size()+j, std::numeric_limits<int>::max());
+                grafo.set_capacity(T.size()+i, T.size()+j, 5);
 #endif
             }
         }
@@ -99,7 +107,7 @@ int main(int argc, char** argv) {
     }
     // std::cout << "Cotas eliminadas" << std::endl;
     
-    int k = 0;
+    int k = 39;
     int maxflow = -1;
     while (maxflow == -1) {
         k++;
@@ -125,12 +133,12 @@ int main(int argc, char** argv) {
                 cGrafo.set_capacity(i, t, value);
             }
         }
-
-       // std::cout << "Grafo listo" << std::endl;
-       maxflow = ff.run(cGrafo, s, t);
-       if (maxflow != -1) {
-           grafo = graph(cGrafo);
-       }
+        //cGrafo.print();
+        // std::cout << "Grafo listo" << std::endl;
+        maxflow = ff.run(cGrafo, s, t);
+        if (maxflow != -1) {
+            grafo = graph(cGrafo);
+        }
        // std::cout <<" MaxFlow: " << maxflow << std::endl;
     }
     std::cout << k << std::endl;
@@ -138,47 +146,47 @@ int main(int argc, char** argv) {
     int s = T.size()*2;
     int t = T.size()*2+1;
     std::list<int> pilots = grafo.get_neighbours(s);
-    int p = 1;
-    for (std::list<int>::iterator it = pilots.begin(); it != pilots.end() && p <= k; it++) {
-        ++p;
-        int parent[grafo.get_size()];
-        std::queue<int> Q;
-        bool visited[grafo.get_size()];
-        for (int i = 0; i < grafo.get_size(); ++i) {
-            visited[i] = false;
-        }
-        Q.push(s);
-        visited[s] = true;
-        parent[s] = -1;
-        while (!Q.empty()) {
-            int node = Q.front();
-            Q.pop();
-            std::list<int> neighbours;
-            neighbours = grafo.get_neighbours(node);
+    for (std::list<int>::iterator it = pilots.begin(); it != pilots.end(); it++) {
+        if (grafo.get_flux(s, *it) > 0) {
+            int parent[grafo.get_size()];
+            std::queue<int> Q;
+            bool visited[grafo.get_size()];
+            for (int i = 0; i < grafo.get_size(); ++i) {
+                visited[i] = false;
+            }
+            Q.push(s);
+            visited[s] = true;
+            parent[s] = -1;
+            while (!Q.empty()) {
+                int node = Q.front();
+                Q.pop();
+                std::list<int> neighbours;
+                neighbours = grafo.get_neighbours(node);
 
-          //  std::cout << "NODE: " << node << std::endl;
-            for (std::list<int>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
-                int u = *it;
-                //std::cout << "vecino: " << u << std::endl;
-                if (!visited[u] && (grafo.get_flux(node, u) == 1 || u == node+T.size())) {
-                   // std::cout << std::endl << "Capacity arista " << node << " " << u << ": " << grafo.get_capacity(node, u) << std::endl;
-                    visited[u] = true;
-                    Q.push(u);
-                    parent[u] = node;
+              //  std::cout << "NODE: " << node << std::endl;
+                for (std::list<int>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+                    int u = *it;
+                    //std::cout << "vecino: " << u << std::endl;
+                    if (!visited[u] && (grafo.get_flux(node, u) == 1 || u == node+T.size())) {
+                       // std::cout << std::endl << "Capacity arista " << node << " " << u << ": " << grafo.get_capacity(node, u) << std::endl;
+                        visited[u] = true;
+                        Q.push(u);
+                        parent[u] = node;
+                    }
                 }
             }
+            for (int node = t; node != s; ) {
+                    int u = parent[node];
+                    if (node < T.size()) {
+                        std::cout << node << " ";
+                    }
+                    if (grafo.has_edge(u, node)) {
+                        grafo.set_flux(u, node, 0);
+                    }
+                    node = u;
+            }
+            std::cout << std::endl;
         }
-        for (int node = t; node != s; ) {
-                int u = parent[node];
-                if (node < T.size()) {
-                    std::cout << node << " ";
-                }
-                if (grafo.has_edge(u, node)) {
-                    grafo.set_flux(u, node, 0);
-                }
-                node = u;
-        }
-        std::cout << std::endl;
     }
     return 0;
 }

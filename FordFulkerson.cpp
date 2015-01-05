@@ -56,10 +56,12 @@ int FordFulkerson::run(graph &grafo, int s, int t){
             u = parent[node];
             if (grafo.has_edge(u, node)){
                 rGraph.set_capacity(u, node, rGraph.get_capacity(u, node)-flow);
+                rGraph.set_capacity(node, u, rGraph.get_capacity(node, u)+flow);
                 grafo.set_flux(u, node, grafo.get_flux(u, node)+flow);
             }
             else {
                 rGraph.set_capacity(node, u, rGraph.get_capacity(node, u)+flow);
+                rGraph.set_capacity(node, u, rGraph.get_capacity(node, u)-flow);
                 grafo.set_flux(node, u, grafo.get_flux(node, u)-flow);
             }
             node = u;
