@@ -4,7 +4,7 @@
 #include <algorithm>
 #include "graph.h"
 #include "FordFulkerson.h"
-#define VERSION_2
+
 using namespace std;
 
 struct trayecto {
