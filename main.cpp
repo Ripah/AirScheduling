@@ -8,6 +8,7 @@
 using namespace std;
 
 struct trayecto {
+    int id;
     int origen;
     int destino;
     int salida;
@@ -17,29 +18,38 @@ struct trayecto {
     }
 };
 
-FordFulkerson ff;
+vector<trayecto> T;
+
+void DFS(graph grafo, int node, int t) {
+    // caso base
+    if (node == t)
+        return;
+    // caso recursivo
+    std::list<int> list = grafo.get_neighbours(node);
+    std::list<int>::iterator it = list.begin();
+    while (grafo.get_flux(node, *it) <= 0) it++;
+    if (*it < T.size()) cout << " " << T[*it].id;
+    grafo.set_flux(node, *it, grafo.get_flux(node, *it) -1);
+    DFS(grafo, *it, t);
+}
 
 int main(int argc, char** argv) {
     
     // leer entrada 
-    vector<trayecto> T;
+    
     int num;
+    int i = 1;
     while(cin >> num) {
         trayecto tra;
+        tra.id = i; 
         tra.origen = num;
         cin >> tra.destino;
         cin >> tra.salida;
         cin >> tra.llegada;
         T.insert(T.end(), tra);
+        i++;
     }
-    /*for (int i=0; i<5; i++) {
-        trayecto tra;
-        cin >> tra.origen;
-        cin >> tra.destino;
-        cin >> tra.salida;
-        cin >> tra.llegada;
-        T.insert(T.end(), tra);
-    }*/
+
     // Odenar las entradas de acuerdo al tiempo de salida
     sort(T.begin(), T.end(), trayecto::comparar);
     
@@ -69,7 +79,7 @@ int main(int argc, char** argv) {
                 // pero como no hay problema si es más grande usaremos el mayor número posible para
                 // simplificar el calculo
                 grafo.add_edge(T.size()+i, T.size()+j);
-                grafo.set_capacity(T.size()+i, T.size()+j, 5);
+                grafo.set_capacity(T.size()+i, T.size()+j, std::numeric_limits<int>::max());
 #endif
             }
         }
@@ -106,7 +116,7 @@ int main(int argc, char** argv) {
         }
     }
     // std::cout << "Cotas eliminadas" << std::endl;
-    
+    FordFulkerson ff;
     int k = 0;
     int maxflow = -1;
     while (maxflow == -1) {
@@ -143,50 +153,34 @@ int main(int argc, char** argv) {
     }
     std::cout << k << std::endl;
     // imprimimos el camino
-    
-    int s = T.size()*2;
-    int t = T.size()*2+1;
-    std::list<int> pilots = grafo.get_neighbours(s);
-    for (std::list<int>::iterator it = pilots.begin(); it != pilots.end(); it++) {
-        if (grafo.get_flux(s, *it) > 0) {
-            int parent[grafo.get_size()];
-            std::queue<int> Q;
-            bool visited[grafo.get_size()];
-            for (int i = 0; i < grafo.get_size(); ++i) {
-                visited[i] = false;
-            }
-            Q.push(s);
-            visited[s] = true;
-            parent[s] = -1;
-            while (!Q.empty()) {
-                int node = Q.front();
-                Q.pop();
-                std::list<int> neighbours;
-                neighbours = grafo.get_neighbours(node);
 
-              //  std::cout << "NODE: " << node << std::endl;
-                for (std::list<int>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
-                    int u = *it;
-                    //std::cout << "vecino: " << u << std::endl;
-                    if (!visited[u] && (grafo.get_flux(node, u) == 1 || u == node+T.size())) {
-                       // std::cout << std::endl << "Capacity arista " << node << " " << u << ": " << grafo.get_capacity(node, u) << std::endl;
-                        visited[u] = true;
-                        Q.push(u);
-                        parent[u] = node;
-                    }
-                }
-            }
-            for (int node = t; node != s; ) {
-                    int u = parent[node];
-                    if (node < T.size()) {
-                        std::cout << node << " ";
-                    }
-                    if (grafo.has_edge(u, node)) {
-                        grafo.set_flux(u, node, 0);
-                    }
-                    node = u;
-            }
-            std::cout << std::endl;
+    int s = T.size()*2 + 2;
+    int t = T.size()*2 + 3;
+    // Flujos desde y hacia S y T fuera
+    std::list<int> list = grafo.get_neighbours(s);
+    for (std::list<int>::iterator it = list.begin(); it != list.end(); it++) {
+        grafo.set_flux(s, *it, 0);
+    }
+    list = grafo.get_parents(t);
+    for (std::list<int>::iterator it = list.begin(); it != list.end(); it++) {
+        grafo.set_flux(*it, t, 0);
+    }
+    
+    s = T.size()*2;
+    t = T.size()*2+1;
+    
+    // Poner a 1 el flujo entre origen y destino de los viajes
+    for (int i=0; i<T.size(); i++) {
+        grafo.set_flux(i, T.size()+i, 1);
+    }
+    
+    // DFS desde s para buscar caminos
+    list = grafo.get_neighbours(s);
+    for (std::list<int>::iterator it = list.begin(); it != list.end(); it++) {
+        if (grafo.get_flux(s, *it) > 0) {
+            cout << T[*it].id;
+            DFS(grafo, *it, t);
+            cout << endl;
         }
     }
     return 0;

@@ -85,6 +85,11 @@ public:
      */
     std::list<int> get_neighbours(int id_node);
     /**
+     * Devuelve los nodos que acceden a id_nodo.
+     * @param id_node Id del nodo
+     */
+    std::list<int> get_parents(int id_node);
+    /**
      * Devuelve True si existe una arista entre los dos nodos (de id_node_1 a id_nodo_2).
      * @param id_node_1 Id del nodo 1
      * @param id_node_2 Id del nodo 2

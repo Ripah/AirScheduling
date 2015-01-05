@@ -110,12 +110,12 @@ void graph::add_edge(int id_node_1, int id_node_2) {
 int graph::get_num_neighbours(int id_node){
     return list_dest[id_node].size();
 }
-    /**
-     * Devuelve los nodos accesibles desde id_nodo.
-     * @param id_node Id del nodo
-     */
+
 std::list<int> graph::get_neighbours(int id_node){
     return list_dest[id_node];
 }
 
+std::list<int> graph::get_parents(int id_node){
+    return list_orig[id_node];
+}
 
