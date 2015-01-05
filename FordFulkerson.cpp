@@ -19,20 +19,11 @@ int FordFulkerson::run(graph &grafo, int s, int t){
     graph rGraph(grafo.get_size());
     for (int i = 0; i < grafo.get_size(); ++i) {
         for (int j = 0; j < grafo.get_size(); ++j) {
-            //Look at all vertex pairs
+            //Look at all vertex
             if (grafo.has_edge(i,j)) {
-                int n;
-                int flux = grafo.get_flux(i,j);
-                int capacity = grafo.get_capacity(i,j);
-
-                //std::cin >> n;
-                int residual_capacity = capacity - flux;
                 rGraph.add_edge(j, i);
                 rGraph.add_edge(i, j);
-                rGraph.set_capacity(i,j,residual_capacity);
-                rGraph.set_capacity(j,i,flux);
-               // std::cout << "Arista " << i << " " << j << " tendra capacidad " << residual_capacity << std::endl;
-               // std::cout << "Arista " << j << " " << i << " tendra capacidad " << flux << std::endl;
+                rGraph.set_capacity(i,j,grafo.get_capacity(i, j));
             }
         }
     }
@@ -41,29 +32,26 @@ int FordFulkerson::run(graph &grafo, int s, int t){
     int parent[grafo.get_size()];
     int max_flow = 0;
     while(bfs.search(rGraph, s, t, parent)) {
-       // std::cout << "Hay camino" << std::endl;
+        // std::cout << "Hay camino" << std::endl;
         int flow = std::numeric_limits<int>::max();
         int u;
+        // Encontrar la capacidad minima del camino
         for (int node = t; node != s; ) {
             u = parent[node];
-          //  std::cout << "U: " << u << " Node: " << node << std::endl;
-           // std::cout << "Flow: " << flow << "Cap: " << rGraph.get_capacity(u, node) << std::endl;
-            int a = rGraph.get_capacity(u, node);
+            //std::cout << "U: " << u << " Node: " << node << std::endl;
+            //std::cout << "Flow: " << flow << "Cap: " << rGraph.get_capacity(u, node) << std::endl;
             flow = std::min(flow, rGraph.get_capacity(u, node));
             node = u;
         }
+        // Acutalizar la capacidad u flujo de los grafos
         for (int node = t; node != s; ) {
             u = parent[node];
-            if (grafo.has_edge(u, node)){
-                rGraph.set_capacity(u, node, rGraph.get_capacity(u, node)-flow);
-                rGraph.set_capacity(node, u, rGraph.get_capacity(node, u)+flow);
+            rGraph.set_capacity(u, node, rGraph.get_capacity(u, node)-flow);
+            rGraph.set_capacity(node, u, rGraph.get_capacity(node, u)+flow);
+            if (grafo.has_edge(u, node))
                 grafo.set_flux(u, node, grafo.get_flux(u, node)+flow);
-            }
-            else {
-                rGraph.set_capacity(node, u, rGraph.get_capacity(node, u)+flow);
-                rGraph.set_capacity(node, u, rGraph.get_capacity(node, u)-flow);
+            else
                 grafo.set_flux(node, u, grafo.get_flux(node, u)-flow);
-            }
             node = u;
         }
        // std::cout << flow << std::endl;

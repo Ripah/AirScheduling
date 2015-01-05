@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
     }
     // std::cout << "Cotas eliminadas" << std::endl;
     
-    int k = 39;
+    int k = 0;
     int maxflow = -1;
     while (maxflow == -1) {
         k++;
@@ -133,7 +133,7 @@ int main(int argc, char** argv) {
                 cGrafo.set_capacity(i, t, value);
             }
         }
-        //cGrafo.print();
+
         // std::cout << "Grafo listo" << std::endl;
         maxflow = ff.run(cGrafo, s, t);
         if (maxflow != -1) {
@@ -143,6 +143,7 @@ int main(int argc, char** argv) {
     }
     std::cout << k << std::endl;
     // imprimimos el camino
+    
     int s = T.size()*2;
     int t = T.size()*2+1;
     std::list<int> pilots = grafo.get_neighbours(s);
