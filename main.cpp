@@ -117,12 +117,16 @@ int main(int argc, char** argv) {
     }
     // std::cout << "Cotas eliminadas" << std::endl;
     FordFulkerson ff;
-    int k = 0;
+    // Busqueda binaria de la q entre 1 y T.size()
+    int bot = 0;
+    int top = T.size();
+    int k = T.size()/2;
     int maxflow = -1;
-    while (maxflow == -1) {
-        k++;
-        std::cout << "K: " << k << std::endl;
-        graph cGrafo = graph(grafo);
+    graph cGrafo;
+    graph last_good;
+    while (k != bot) {
+        //std::cout << "K: " << k << std::endl;
+        cGrafo = graph(grafo);
         //std::cout << "Aristas entre S, T y origenes y destinos anadidas" << std::endl;
         //S y T tienen de value -k y k
         cGrafo.set_value(T.size()*2, -k);
@@ -147,23 +151,31 @@ int main(int argc, char** argv) {
         // std::cout << "Grafo listo" << std::endl;
         maxflow = ff.run(cGrafo, s, t);
         if (maxflow != -1) {
-            grafo = graph(cGrafo);
+            top = k;
+            k = (top + bot) / 2;
+            last_good = cGrafo;
         }
-       // std::cout <<" MaxFlow: " << maxflow << std::endl;
+        else {
+            bot = k;
+            k = (top + bot) / 2;
+        }
+        // std::cout <<" MaxFlow: " << maxflow << std::endl;
     }
+    k = top;
+    
     std::cout << k << std::endl;
     // imprimimos el camino
 
     int s = T.size()*2 + 2;
     int t = T.size()*2 + 3;
     // Flujos desde y hacia S y T fuera
-    std::list<int> list = grafo.get_neighbours(s);
+    std::list<int> list = last_good.get_neighbours(s);
     for (std::list<int>::iterator it = list.begin(); it != list.end(); it++) {
-        grafo.set_flux(s, *it, 0);
+        last_good.set_flux(s, *it, 0);
     }
-    list = grafo.get_parents(t);
+    list = last_good.get_parents(t);
     for (std::list<int>::iterator it = list.begin(); it != list.end(); it++) {
-        grafo.set_flux(*it, t, 0);
+        last_good.set_flux(*it, t, 0);
     }
     
     s = T.size()*2;
@@ -171,15 +183,15 @@ int main(int argc, char** argv) {
     
     // Poner a 1 el flujo entre origen y destino de los viajes
     for (int i=0; i<T.size(); i++) {
-        grafo.set_flux(i, T.size()+i, 1);
+        last_good.set_flux(i, T.size()+i, 1);
     }
     
     // DFS desde s para buscar caminos
-    list = grafo.get_neighbours(s);
+    list = last_good.get_neighbours(s);
     for (std::list<int>::iterator it = list.begin(); it != list.end(); it++) {
-        if (grafo.get_flux(s, *it) > 0) {
+        if (last_good.get_flux(s, *it) > 0) {
             cout << T[*it].id;
-            DFS(grafo, *it, t);
+            DFS(last_good, *it, t);
             cout << endl;
         }
     }
